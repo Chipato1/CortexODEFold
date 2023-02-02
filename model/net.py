@@ -33,7 +33,7 @@ class Unet(nn.Module):
                                    stride=1, padding=1)
         self.lastconv2 = nn.Conv3d(in_channels=16, out_channels=c_out, kernel_size=3,
                                    stride=1, padding=1)
-        self.up = nn.Upsample(scale_factor=2, mode='trilinear')
+        self.up = nn.Upsample(scale_factor=2, mode='trilinear', align_corners=False)
         
     def forward(self, x):
 
@@ -63,7 +63,6 @@ class Unet(nn.Module):
         x = self.lastconv2(x)
 
         return x
-
 
 class CortexODE(nn.Module):
     """

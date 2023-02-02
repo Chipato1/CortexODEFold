@@ -55,12 +55,12 @@ def load_seg_data(config, data_usage='train'):
         subid = subject_list[i]
 
         if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
+            brain = nib.load(data_dir+subid+'/mri/orig.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 255.).astype(np.float32)
             brain_arr = process_volume(brain_arr, data_name)
 
-            seg = nib.load(data_dir+subid+'/mri/ribbon.mgz')
+            seg = nib.load(data_dir+subid+'/mri/ribbon.nii.gz')
             seg_arr = seg.get_fdata()
             seg_arr = process_volume(seg_arr, data_name)[0]
             seg_left = (seg_arr == 2).astype(int)    # left wm
@@ -69,7 +69,7 @@ def load_seg_data(config, data_usage='train'):
             seg_arr = np.zeros_like(seg_left, dtype=int)  # final label
             seg_arr += 1 * seg_left
             seg_arr += 2 * seg_right
-    
+            
         elif data_name == 'dhcp':
             brain = nib.load(data_dir+subid+'/'+subid+'_T2w.nii.gz')
             brain_arr = brain.get_fdata()
@@ -163,7 +163,7 @@ def load_surf_data(config, data_usage='train'):
         
         # ------- load brain MRI ------- 
         if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
+            brain = nib.load(data_dir+subid+'/mri/orig.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 255.).astype(np.float32)
         elif data_name == 'dhcp':
@@ -184,7 +184,11 @@ def load_surf_data(config, data_usage='train'):
                 # depends on your FreeSurfer version
                 v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
             elif data_name == 'adni':
-                v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
+                #v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
+                # CNote -> Chaged
+                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_white_reduced_0.3.ply')
+                v_gt = tr_mesh.vertices
+                f_gt = tr_mesh.faces
             elif data_name == 'dhcp':
                 if surf_hemi == 'lh':
                     surf_gt = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
@@ -206,7 +210,9 @@ def load_surf_data(config, data_usage='train'):
                 # depends on your FreeSurfer version
                 v_in, f_in = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
             elif data_name == 'adni':
-                v_in, f_in = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
+                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_white_reduced_0.3.ply')
+                v_in = tr_mesh.vertices
+                f_in = tr_mesh.faces
             elif data_name == 'dhcp':
                 if surf_hemi == 'lh':
                     surf_in = nib.load(data_dir+subid+'/'+subid+'_left_wm.surf.gii')
@@ -233,7 +239,9 @@ def load_surf_data(config, data_usage='train'):
             if data_name == 'hcp':
                 v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
             elif data_name == 'adni':
-                v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial')
+                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_pial_reduced_0.3.ply')
+                v_gt = tr_mesh.vertices
+                f_gt = tr_mesh.faces
             elif data_name == 'dhcp':
                 if surf_hemi == 'lh':
                     surf_gt = nib.load(data_dir+subid+'/'+subid+'_left_pial.surf.gii')

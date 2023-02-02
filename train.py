@@ -85,8 +85,7 @@ def train_seg(config):
                 for idx, data in enumerate(validloader):
                     volume_in, seg_gt = data
                     volume_in = volume_in.to(device)
-                    seg_gt = seg_gt.long().to(device)
-                    seg_out = segnet(volume_in)
+
                     avg_error.append(nn.CrossEntropyLoss()(seg_out, seg_gt).item())
                     
                     # compute dice score
@@ -187,8 +186,6 @@ def train_surf(config):
             optimizer.zero_grad()
 
             volume_in = volume_in.to(device).float()
-            v_in = v_in.to(device)
-            f_in = f_in.to(device)
             v_gt = v_gt.to(device)
             f_gt = f_gt.to(device)
             
