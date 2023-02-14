@@ -136,7 +136,7 @@ if __name__ == '__main__':
 
         # ------- load brain MRI ------- 
         if data_name == 'hcp' or data_name == 'adni':
-            brain = nib.load(data_dir+subid+'/mri/orig.mgz')
+            brain = nib.load(data_dir+subid+'/mri/orig.nii.gz')
             brain_arr = brain.get_fdata()
             brain_arr = (brain_arr / 255.).astype(np.float32)
         elif data_name == 'dhcp':
