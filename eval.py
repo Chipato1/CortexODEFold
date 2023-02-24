@@ -67,11 +67,15 @@ def seg2surf(seg,
     # but the affine matrix of the MRI was not changed.
     # So this bias is caused by the different between 
     # the original and new affine matrix.
+    
+    # Note: This does not make sense!
+    """
     if data_name == 'hcp':
         v_mc = v_mc + [0.0090, 0.0058, 0.0088]
     elif data_name == 'adni':
         v_mc = v_mc + [0.0090, 0.0000, 0.0095]
-        
+    """
+    
     # ------ mesh smoothing ------
     v_mc = torch.Tensor(v_mc).unsqueeze(0).to(device)
     f_mc = torch.LongTensor(f_mc).unsqueeze(0).to(device)
