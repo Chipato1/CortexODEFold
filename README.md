@@ -1,3 +1,8 @@
+# Disclaimer
+This is a fork of CortexODE. Did some minor changes to use the model with clinical data. :)
+
+
+
 # CortexODE: Learning Cortical Surface Reconstruction by Neural ODEs
 
 ![](figure/diffeo.png)
