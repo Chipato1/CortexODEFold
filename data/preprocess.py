@@ -51,6 +51,9 @@ def process_surface(v, f, data_name='hcp'):
         v = (v - [96, 112, 96]) / 112
 
     elif data_name == 'adni':
+        # Working in RAS
+        v[:, [0,1]] = v[:, [0,1]] * (-1)
+
         # clip the surface according to the volume
         v[:,0] = v[:,0] - 3
         v[:,1] = - v[:,1] - 5

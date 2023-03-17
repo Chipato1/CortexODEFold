@@ -176,7 +176,7 @@ def load_surf_data(config, data_usage='train'):
         if surf_type == 'wm':
             # ------- load input surface ------- 
             # inputs is the initial surface
-            mesh_in = trimesh.load(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            mesh_in = trimesh.load(init_dir+'init_'+data_name+'_'+surf_hemi+'_'+subid+'.obj', process=False)
             v_in, f_in = mesh_in.vertices, mesh_in.faces
             
             # ------- load gt surface ------- 
@@ -186,7 +186,7 @@ def load_surf_data(config, data_usage='train'):
             elif data_name == 'adni':
                 #v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white')
                 # CNote -> Chaged
-                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_white_reduced_0.3.ply')
+                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_white_reduced_0.3.ply', process=False)
                 v_gt = tr_mesh.vertices
                 f_gt = tr_mesh.faces
             elif data_name == 'dhcp':
@@ -210,7 +210,8 @@ def load_surf_data(config, data_usage='train'):
                 # depends on your FreeSurfer version
                 v_in, f_in = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.white.deformed')
             elif data_name == 'adni':
-                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_white_reduced_0.3.ply')
+                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_white_fsaverage6_resampled.ply', process=False)
+                #tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_white_reduced_0.3.ply')
                 v_in = tr_mesh.vertices
                 f_in = tr_mesh.faces
             elif data_name == 'dhcp':
@@ -239,7 +240,8 @@ def load_surf_data(config, data_usage='train'):
             if data_name == 'hcp':
                 v_gt, f_gt = nib.freesurfer.io.read_geometry(data_dir+subid+'/surf/'+surf_hemi+'.pial.deformed')
             elif data_name == 'adni':
-                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_pial_reduced_0.3.ply')
+                #tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_pial_reduced_0.3.ply')
+                tr_mesh = trimesh.load(data_dir+subid+'/surf/'+surf_hemi+'_pial_fsaverage6_resampled.ply', process=False)
                 v_gt = tr_mesh.vertices
                 f_gt = tr_mesh.faces
             elif data_name == 'dhcp':
@@ -253,7 +255,10 @@ def load_surf_data(config, data_usage='train'):
                 v_tmp[:,:3] = v_gt
                 v_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
             v_gt, f_gt = process_surface(v_gt, f_gt, data_name)
-            
+
+        if v_gt.shape != v_in.shape:
+            print("shape mismatch: ", subid)
+    
         braindata = BrainData(volume=brain_arr, v_in=v_in, v_gt=v_gt,
                               f_in=f_in, f_gt=f_gt)
         # add to data list
