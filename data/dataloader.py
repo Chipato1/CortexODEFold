@@ -256,8 +256,8 @@ def load_surf_data(config, data_usage='train'):
                 v_gt = v_tmp.dot(np.linalg.inv(brain.affine).T)[:,:3]
             v_gt, f_gt = process_surface(v_gt, f_gt, data_name)
 
-        if v_gt.shape != v_in.shape:
-            print("shape mismatch: ", subid)
+        #if v_gt.shape != v_in.shape:
+        #    print("shape mismatch: ", subid)
     
         braindata = BrainData(volume=brain_arr, v_in=v_in, v_gt=v_gt,
                               f_in=f_in, f_gt=f_gt)

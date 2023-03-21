@@ -202,15 +202,22 @@ if __name__ == '__main__':
         # ------- save predictde surfaces ------- 
         if test_type == 'pred':
             ### save mesh to .obj or .stl format by Trimesh
-            # mesh_wm = trimesh.Trimesh(v_wm_pred, f_wm_pred)
-            # mesh_gm = trimesh.Trimesh(v_gm_pred, f_gm_pred)
-            # mesh_wm.export(result_dir+'wm_'+data_name+'_'+surf_hemi+'_'+subid+'.stl')
-            # mesh_gm.export(result_dir+'gm_'+data_name+'_'+surf_hemi+'_'+subid+'.obj')
+            mesh_wm = trimesh.Trimesh(v_wm_pred, f_wm_pred)
+            mesh_gm = trimesh.Trimesh(v_gm_pred, f_gm_pred)
+
+            if not os.path.exists(result_dir + subid):
+                try:
+                    os.mkdir(result_dir + subid)
+                except:
+                    print("Cant create folder for: ", subid)
+
+            mesh_wm.export(result_dir + subid +'/wm_'+data_name+'_'+surf_hemi+'.obj')
+            mesh_gm.export(result_dir + subid +'/gm_'+data_name+'_'+surf_hemi+'.obj')
 
             # save the surfaces in FreeSurfer format
-            nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.white',
+            #nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.white',
                                              v_wm_pred, f_wm_pred)
-            nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.pial',
+            #nib.freesurfer.io.write_geometry(result_dir+data_name+'_'+surf_hemi+'_'+subid+'.pial',
                                              v_gm_pred, f_gm_pred)
             
         # ------- load ground truth surfaces ------- 
